@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+
 const Endereco = require('./Endereco');
 const Usuario = require('./Usuario');
 const Fornecedor = require('./Fornecedor');
@@ -35,6 +36,59 @@ const Produto = sequelize.define('Produto', {
   tableName: 'produtos',
   timestamps: true,
 });
+
+// Reserva → Hospede
+Reserva.belongsTo(Hospede, { foreignKey: 'hospedeId' });
+Hospede.hasMany(Reserva, { foreignKey: 'hospedeId' });
+
+// Reserva ↔ ServicoExtra (muitos-para-muitos)
+Reserva.belongsToMany(ServicoExtra, {
+  through: ServicoExtra_has_Reserva,
+  foreignKey: 'Reserva_idReserva',
+  otherKey: 'ServicoExtra_idServicoExtra',
+});
+ServicoExtra.belongsToMany(Reserva, {
+  through: ServicoExtra_has_Reserva,
+  foreignKey: 'ServicoExtra_idServicoExtra',
+  otherKey: 'Reserva_idReserva',
+});
+
+// EstoqueItem ↔ ServicoExtra (muitos-para-muitos)
+EstoqueItem.belongsToMany(ServicoExtra, {
+  through: EstoqueItem_has_ServicoExtra,
+  foreignKey: 'EstoqueItem_idEstoqueItem',
+  otherKey: 'ServicoExtra_idServicoExtra',
+});
+ServicoExtra.belongsToMany(EstoqueItem, {
+  through: EstoqueItem_has_ServicoExtra,
+  foreignKey: 'ServicoExtra_idServicoExtra',
+  otherKey: 'EstoqueItem_idEstoqueItem',
+});
+
+// Quarto ↔ Reserva (muitos-para-muitos)
+Quarto.belongsToMany(Reserva, {
+  through: Quarto_has_Reserva,
+  foreignKey: 'Quarto_idQuarto',
+  otherKey: 'Reserva_idReserva',
+});
+Reserva.belongsToMany(Quarto, {
+  through: Quarto_has_Reserva,
+  foreignKey: 'Reserva_idReserva',
+  otherKey: 'Quarto_idQuarto',
+});
+
+// Hospede ↔ Reserva (caso use associação separada)
+Hospede.belongsToMany(Reserva, {
+  through: Hospede_has_Reserva,
+  foreignKey: 'Hospede_idHospede',
+  otherKey: 'Reserva_idReserva',
+});
+Reserva.belongsToMany(Hospede, {
+  through: Hospede_has_Reserva,
+  foreignKey: 'Reserva_idReserva',
+  otherKey: 'Hospede_idHospede',
+});
+
 
 module.exports = {
   sequelize,

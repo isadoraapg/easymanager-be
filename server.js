@@ -6,7 +6,12 @@ const { Produto } = require('./models');
 const fs = require('fs');
 const mysql = require('mysql2/promise');
 
+const db = require('./models');
+const { Produto } = db;
+
 const app = express();
+const PORT = process.env.PORT || 3000;
+
 app.use(cors({
   origin: 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -23,8 +28,6 @@ app.use('/api/usuarios', require('./routes/UsuarioRoutes'));
 app.use('/api/estoque', require('./routes/EstoqueItemRoutes'));
 
 
-const PORT = process.env.PORT || 3000;
-
 async function runSqlScriptIfNeeded() {
   if (process.env.CREATE_DB === 'true') {
     const sql = fs.readFileSync('./config/create_database.sql', 'utf8');
@@ -32,7 +35,7 @@ async function runSqlScriptIfNeeded() {
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
       password: process.env.DB_PASS,
-      multipleStatements: true // Permite rodar vários comandos de uma vez
+      multipleStatements: true 
     });
     await connection.query(sql);
     await connection.end();
@@ -49,7 +52,7 @@ async function runSqlScriptIfNeeded() {
   require('./models/ServicoExtra_has_Reserva');
 
 
-  sequelize.sync()
+  db.sequelize.sync()
     .then(() => {
       console.log('Banco sincronizado com sucesso.');
       app.listen(PORT, () => {
