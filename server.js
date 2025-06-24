@@ -42,7 +42,13 @@ async function runSqlScriptIfNeeded() {
 
 (async () => {
   await runSqlScriptIfNeeded();
-  // ... o restante do seu código para iniciar o Express e sincronizar o Sequelize
+  
+  require('./models/Hospede');
+  require('./models/Reserva');
+  require('./models/ServicoExtra');
+  require('./models/ServicoExtra_has_Reserva');
+
+
   sequelize.sync()
     .then(() => {
       console.log('Banco sincronizado com sucesso.');

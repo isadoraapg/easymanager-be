@@ -3,7 +3,7 @@ const sequelize = require('../config/database');
 const Hospede = require('./Hospede');
 
 const Reserva = sequelize.define('Reserva', {
-  id: {
+  idReserva: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
@@ -34,5 +34,12 @@ const Reserva = sequelize.define('Reserva', {
 });
 
 Reserva.belongsTo(Hospede, { foreignKey: 'hospedeId' });
+
+const ServicoExtra = require('./ServicoExtra');
+Reserva.belongsToMany(ServicoExtra, {
+  through: 'ServicoExtra_has_Reserva',
+  foreignKey: 'Reserva_idReserva',
+  otherKey: 'ServicoExtra_idServicoExtra'
+});
 
 module.exports = Reserva; 

@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const Reserva = require('./Reserva');
 
 const ServicoExtra = sequelize.define('ServicoExtra', {
   idServicoExtra: {
@@ -18,6 +19,14 @@ const ServicoExtra = sequelize.define('ServicoExtra', {
 }, {
   tableName: 'ServicoExtra',
   timestamps: false,
+});
+
+
+
+ServicoExtra.belongsToMany(Reserva, {
+  through: 'ServicoExtra_has_Reserva',
+  foreignKey: 'ServicoExtra_idServicoExtra',
+  otherKey: 'Reserva_idReserva'
 });
 
 module.exports = ServicoExtra; 
