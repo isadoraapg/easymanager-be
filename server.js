@@ -15,7 +15,7 @@ app.use(cors({
 app.use(express.json());
 
 // Rotas
-app.use('/api/auth', require('./routes/AuthRoutes'));
+app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/reservas', require('./routes/ReservaRoutes'));
 app.use('/api/pagamentos', require('./routes/PagamentoRoutes'));
 app.use('/api/hospedes', require('./routes/HospedeRoutes'));
