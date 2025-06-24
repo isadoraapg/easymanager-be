@@ -1,13 +1,26 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const sequelize = require('./config/database');
-
 const fs = require('fs');
 const mysql = require('mysql2/promise');
 
-const db = require('./models');
-const { Produto } = db;
+const {
+  sequelize,
+  Produto,
+  Endereco,
+  Usuario,
+  Fornecedor,
+  Hospede,
+  EstoqueItem,
+  Reserva,
+  ServicoExtra,
+  Pagamento,
+  Quarto,
+  ServicoExtra_has_Reserva,
+  Hospede_has_Reserva,
+  EstoqueItem_has_ServicoExtra,
+  Quarto_has_Reserva
+} = require('./models');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,7 +32,65 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// ======================
+// Definição de relações
+// ======================
+
+// Reserva → Hospede
+Reserva.belongsTo(Hospede, { foreignKey: 'hospedeId' });
+Hospede.hasMany(Reserva, { foreignKey: 'hospedeId' });
+
+// Reserva ↔ ServicoExtra
+Reserva.belongsToMany(ServicoExtra, {
+  through: ServicoExtra_has_Reserva,
+  foreignKey: 'Reserva_idReserva',
+  otherKey: 'ServicoExtra_idServicoExtra',
+});
+ServicoExtra.belongsToMany(Reserva, {
+  through: ServicoExtra_has_Reserva,
+  foreignKey: 'ServicoExtra_idServicoExtra',
+  otherKey: 'Reserva_idReserva',
+});
+
+// EstoqueItem ↔ ServicoExtra
+EstoqueItem.belongsToMany(ServicoExtra, {
+  through: EstoqueItem_has_ServicoExtra,
+  foreignKey: 'EstoqueItem_idEstoqueItem',
+  otherKey: 'ServicoExtra_idServicoExtra',
+});
+ServicoExtra.belongsToMany(EstoqueItem, {
+  through: EstoqueItem_has_ServicoExtra,
+  foreignKey: 'ServicoExtra_idServicoExtra',
+  otherKey: 'EstoqueItem_idEstoqueItem',
+});
+
+// Quarto ↔ Reserva
+Quarto.belongsToMany(Reserva, {
+  through: Quarto_has_Reserva,
+  foreignKey: 'Quarto_idQuarto',
+  otherKey: 'Reserva_idReserva',
+});
+Reserva.belongsToMany(Quarto, {
+  through: Quarto_has_Reserva,
+  foreignKey: 'Reserva_idReserva',
+  otherKey: 'Quarto_idQuarto',
+});
+
+// Hospede ↔ Reserva (extra)
+Hospede.belongsToMany(Reserva, {
+  through: Hospede_has_Reserva,
+  foreignKey: 'Hospede_idHospede',
+  otherKey: 'Reserva_idReserva',
+});
+Reserva.belongsToMany(Hospede, {
+  through: Hospede_has_Reserva,
+  foreignKey: 'Reserva_idReserva',
+  otherKey: 'Hospede_idHospede',
+});
+
+// ======================
 // Rotas
+// ======================
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/reservas', require('./routes/ReservaRoutes'));
 app.use('/api/pagamentos', require('./routes/PagamentoRoutes'));
@@ -27,7 +98,9 @@ app.use('/api/hospedes', require('./routes/HospedeRoutes'));
 app.use('/api/usuarios', require('./routes/UsuarioRoutes'));
 app.use('/api/estoque', require('./routes/EstoqueItemRoutes'));
 
-
+// ======================
+// Executar script SQL se necessário
+// ======================
 async function runSqlScriptIfNeeded() {
   if (process.env.CREATE_DB === 'true') {
     const sql = fs.readFileSync('./config/create_database.sql', 'utf8');
@@ -35,7 +108,7 @@ async function runSqlScriptIfNeeded() {
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
       password: process.env.DB_PASS,
-      multipleStatements: true 
+      multipleStatements: true
     });
     await connection.query(sql);
     await connection.end();
@@ -43,16 +116,13 @@ async function runSqlScriptIfNeeded() {
   }
 }
 
+// ======================
+// Inicializar servidor e sincronizar banco
+// ======================
 (async () => {
   await runSqlScriptIfNeeded();
-  
-  require('./models/Hospede');
-  require('./models/Reserva');
-  require('./models/ServicoExtra');
-  require('./models/ServicoExtra_has_Reserva');
 
-
-  db.sequelize.sync()
+  sequelize.sync()
     .then(() => {
       console.log('Banco sincronizado com sucesso.');
       app.listen(PORT, () => {
@@ -64,11 +134,13 @@ async function runSqlScriptIfNeeded() {
     });
 })();
 
+// ======================
+// Rotas simples
+// ======================
 app.get('/', (req, res) => {
   res.send('EasyManager Backend funcionando!');
 });
 
-// Rota para criar produto
 app.post('/produtos', async (req, res) => {
   try {
     const novoProduto = await Produto.create(req.body);
