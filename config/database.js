@@ -10,8 +10,8 @@ const sequelize = new Sequelize(
     dialect: 'mysql',
     logging: false,
     define: {
-      timestamps: true,
-      underscored: true
+      timestamps: false,
+      underscored: false
     }
   }
 );

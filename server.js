@@ -20,6 +20,8 @@ app.use('/api/reservas', require('./routes/ReservaRoutes'));
 app.use('/api/pagamentos', require('./routes/PagamentoRoutes'));
 app.use('/api/hospedes', require('./routes/HospedeRoutes'));
 app.use('/api/usuarios', require('./routes/UsuarioRoutes'));
+app.use('/api/estoque', require('./routes/EstoqueItemRoutes'));
+
 
 const PORT = process.env.PORT || 3000;
 
@@ -64,5 +66,14 @@ app.post('/produtos', async (req, res) => {
     res.status(201).json(novoProduto);
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+});
+
+app.get('/produtos', async (req, res) => {
+  try {
+    const produtos = await Produto.findAll();
+    res.json(produtos);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });

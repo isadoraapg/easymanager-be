@@ -11,13 +11,15 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema projeto
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `projeto` DEFAULT CHARACTER SET utf8 ;
-USE `projeto` ;
+
+
+CREATE SCHEMA IF NOT EXISTS `projeto_easymanager` DEFAULT CHARACTER SET utf8 ;	
+USE `projeto_easymanager` ;
 
 -- -----------------------------------------------------
 -- Table `projeto`.`Endereco`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `projeto`.`Endereco` (
+CREATE TABLE IF NOT EXISTS `projeto_easymanager`.`Endereco` (
   `idEndereco` INT NOT NULL AUTO_INCREMENT,
   `cep` VARCHAR(8) NOT NULL,
   `logradouro` VARCHAR(45) NOT NULL,
@@ -33,7 +35,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `projeto`.`Usuario`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `projeto`.`Usuario` (
+CREATE TABLE IF NOT EXISTS `projeto_easymanager`.`Usuario` (
   `idUsuario` INT NOT NULL AUTO_INCREMENT,
   `nomeCompleto` VARCHAR(100) NOT NULL,
   `cpf` VARCHAR(11) NOT NULL,
@@ -47,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `projeto`.`Usuario` (
   INDEX `fk_Usuario_Endereco1_idx` (`Endereco_idEndereco` ASC) VISIBLE,
   CONSTRAINT `fk_Usuario_Endereco1`
     FOREIGN KEY (`Endereco_idEndereco`)
-    REFERENCES `projeto`.`Endereco` (`idEndereco`)
+    REFERENCES `projeto_easymanager`.`Endereco` (`idEndereco`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -56,7 +58,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `projeto`.`Fornecedor`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `projeto`.`Fornecedor` (
+CREATE TABLE IF NOT EXISTS `projeto_easymanager`.`Fornecedor` (
   `idFornecedor` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(45) NOT NULL,
   `telefone` VARCHAR(15) NOT NULL,
@@ -66,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `projeto`.`Fornecedor` (
   INDEX `fk_Fornecedor_Endereco1_idx` (`Endereco_idEndereco` ASC) VISIBLE,
   CONSTRAINT `fk_Fornecedor_Endereco1`
     FOREIGN KEY (`Endereco_idEndereco`)
-    REFERENCES `projeto`.`Endereco` (`idEndereco`)
+    REFERENCES `projeto_easymanager`.`Endereco` (`idEndereco`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -75,7 +77,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `projeto`.`Hospede`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `projeto`.`Hospede` (
+CREATE TABLE IF NOT EXISTS `projeto_easymanager`.`Hospede` (
   `idHospede` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(45) NOT NULL,
   `sobrenome` VARCHAR(45) NOT NULL,
@@ -91,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `projeto`.`Hospede` (
   INDEX `fk_Hospede_Endereco1_idx` (`Endereco_idEndereco` ASC) VISIBLE,
   CONSTRAINT `fk_Hospede_Endereco1`
     FOREIGN KEY (`Endereco_idEndereco`)
-    REFERENCES `projeto`.`Endereco` (`idEndereco`)
+    REFERENCES `projeto_easymanager`.`Endereco` (`idEndereco`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -100,7 +102,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `projeto`.`EstoqueItem`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `projeto`.`EstoqueItem` (
+CREATE TABLE IF NOT EXISTS `projeto_easymanager`.`EstoqueItem` (
   `idItem` INT NOT NULL AUTO_INCREMENT,
   `nomeItem` VARCHAR(45) NOT NULL,
   `descricao` VARCHAR(45) NOT NULL,
@@ -112,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `projeto`.`EstoqueItem` (
   INDEX `fk_EstoqueItem_Fornecedor1_idx` (`Fornecedor_idFornecedor` ASC) VISIBLE,
   CONSTRAINT `fk_EstoqueItem_Fornecedor1`
     FOREIGN KEY (`Fornecedor_idFornecedor`)
-    REFERENCES `projeto`.`Fornecedor` (`idFornecedor`)
+    REFERENCES `projeto_easymanager`.`Fornecedor` (`idFornecedor`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -121,7 +123,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `projeto`.`Reserva`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `projeto`.`Reserva` (
+CREATE TABLE IF NOT EXISTS `projeto_easymanager`.`Reserva` (
   `idReserva` INT NOT NULL AUTO_INCREMENT,
   `dtCheckin` DATE NOT NULL,
   `dtCheckout` DATE NOT NULL,
@@ -135,7 +137,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `projeto`.`ServicoExtra`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `projeto`.`ServicoExtra` (
+CREATE TABLE IF NOT EXISTS `projeto_easymanager`.`ServicoExtra` (
   `idServicoExtra` INT NOT NULL AUTO_INCREMENT,
   `descricao` VARCHAR(45) NOT NULL,
   `valor` DECIMAL(10,2) NULL,
@@ -146,7 +148,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `projeto`.`Pagamento`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `projeto`.`Pagamento` (
+CREATE TABLE IF NOT EXISTS `projeto_easymanager`.`Pagamento` (
   `idPagamento` INT NOT NULL AUTO_INCREMENT,
   `valorPago` DECIMAL(10,2) NOT NULL,
   `dtPagamento` DATE NOT NULL,
@@ -156,7 +158,7 @@ CREATE TABLE IF NOT EXISTS `projeto`.`Pagamento` (
   INDEX `fk_Pagamento_Reserva1_idx` (`Reserva_idReserva` ASC) VISIBLE,
   CONSTRAINT `fk_Pagamento_Reserva1`
     FOREIGN KEY (`Reserva_idReserva`)
-    REFERENCES `projeto`.`Reserva` (`idReserva`)
+    REFERENCES `projeto_easymanager`.`Reserva` (`idReserva`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -165,7 +167,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `projeto`.`Quarto`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `projeto`.`Quarto` (
+CREATE TABLE IF NOT EXISTS `projeto_easymanager`.`Quarto` (
   `idQuarto` INT NOT NULL AUTO_INCREMENT,
   `numeroQuarto` INT NOT NULL,
   `tipoQuarto` VARCHAR(45) NOT NULL,
@@ -179,7 +181,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `projeto`.`ServicoExtra_has_Reserva`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `projeto`.`ServicoExtra_has_Reserva` (
+CREATE TABLE IF NOT EXISTS `projeto_easymanager`.`ServicoExtra_has_Reserva` (
   `ServicoExtra_idServicoExtra` INT NOT NULL,
   `Reserva_idReserva` INT NOT NULL,
   PRIMARY KEY (`ServicoExtra_idServicoExtra`, `Reserva_idReserva`),
@@ -187,12 +189,12 @@ CREATE TABLE IF NOT EXISTS `projeto`.`ServicoExtra_has_Reserva` (
   INDEX `fk_ServicoExtra_has_Reserva_ServicoExtra1_idx` (`ServicoExtra_idServicoExtra` ASC) VISIBLE,
   CONSTRAINT `fk_ServicoExtra_has_Reserva_ServicoExtra1`
     FOREIGN KEY (`ServicoExtra_idServicoExtra`)
-    REFERENCES `projeto`.`ServicoExtra` (`idServicoExtra`)
+    REFERENCES `projeto_easymanager`.`ServicoExtra` (`idServicoExtra`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ServicoExtra_has_Reserva_Reserva1`
     FOREIGN KEY (`Reserva_idReserva`)
-    REFERENCES `projeto`.`Reserva` (`idReserva`)
+    REFERENCES `projeto_easymanager`.`Reserva` (`idReserva`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -201,7 +203,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `projeto`.`Hospede_has_Reserva`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `projeto`.`Hospede_has_Reserva` (
+CREATE TABLE IF NOT EXISTS `projeto_easymanager`.`Hospede_has_Reserva` (
   `Hospede_idHospede` INT NOT NULL,
   `Reserva_idReserva` INT NOT NULL,
   PRIMARY KEY (`Hospede_idHospede`, `Reserva_idReserva`),
@@ -209,12 +211,12 @@ CREATE TABLE IF NOT EXISTS `projeto`.`Hospede_has_Reserva` (
   INDEX `fk_Hospede_has_Reserva_Hospede1_idx` (`Hospede_idHospede` ASC) VISIBLE,
   CONSTRAINT `fk_Hospede_has_Reserva_Hospede1`
     FOREIGN KEY (`Hospede_idHospede`)
-    REFERENCES `projeto`.`Hospede` (`idHospede`)
+    REFERENCES `projeto_easymanager`.`Hospede` (`idHospede`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Hospede_has_Reserva_Reserva1`
     FOREIGN KEY (`Reserva_idReserva`)
-    REFERENCES `projeto`.`Reserva` (`idReserva`)
+    REFERENCES `projeto_easymanager`.`Reserva` (`idReserva`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -223,7 +225,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `projeto`.`EstoqueItem_has_ServicoExtra`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `projeto`.`EstoqueItem_has_ServicoExtra` (
+CREATE TABLE IF NOT EXISTS `projeto_easymanager`.`EstoqueItem_has_ServicoExtra` (
   `EstoqueItem_idItem` INT NOT NULL,
   `ServicoExtra_idServicoExtra` INT NOT NULL,
   PRIMARY KEY (`EstoqueItem_idItem`, `ServicoExtra_idServicoExtra`),
@@ -231,12 +233,12 @@ CREATE TABLE IF NOT EXISTS `projeto`.`EstoqueItem_has_ServicoExtra` (
   INDEX `fk_EstoqueItem_has_ServicoExtra_EstoqueItem1_idx` (`EstoqueItem_idItem` ASC) VISIBLE,
   CONSTRAINT `fk_EstoqueItem_has_ServicoExtra_EstoqueItem1`
     FOREIGN KEY (`EstoqueItem_idItem`)
-    REFERENCES `projeto`.`EstoqueItem` (`idItem`)
+    REFERENCES `projeto_easymanager`.`EstoqueItem` (`idItem`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_EstoqueItem_has_ServicoExtra_ServicoExtra1`
     FOREIGN KEY (`ServicoExtra_idServicoExtra`)
-    REFERENCES `projeto`.`ServicoExtra` (`idServicoExtra`)
+    REFERENCES `projeto_easymanager`.`ServicoExtra` (`idServicoExtra`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -245,7 +247,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `projeto`.`Quarto_has_Reserva`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `projeto`.`Quarto_has_Reserva` (
+CREATE TABLE IF NOT EXISTS `projeto_easymanager`.`Quarto_has_Reserva` (
   `Quarto_idQuarto` INT NOT NULL,
   `Reserva_idReserva` INT NOT NULL,
   PRIMARY KEY (`Quarto_idQuarto`, `Reserva_idReserva`),
@@ -253,12 +255,12 @@ CREATE TABLE IF NOT EXISTS `projeto`.`Quarto_has_Reserva` (
   INDEX `fk_Quarto_has_Reserva_Quarto1_idx` (`Quarto_idQuarto` ASC) VISIBLE,
   CONSTRAINT `fk_Quarto_has_Reserva_Quarto1`
     FOREIGN KEY (`Quarto_idQuarto`)
-    REFERENCES `projeto`.`Quarto` (`idQuarto`)
+    REFERENCES `projeto_easymanager`.`Quarto` (`idQuarto`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Quarto_has_Reserva_Reserva1`
     FOREIGN KEY (`Reserva_idReserva`)
-    REFERENCES `projeto`.`Reserva` (`idReserva`)
+    REFERENCES `projeto_easymanager`.`Reserva` (`idReserva`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
