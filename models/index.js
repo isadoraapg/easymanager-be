@@ -1,6 +1,7 @@
-const { DataTypes } = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
+// Importação dos models
 const Endereco = require('./Endereco');
 const Usuario = require('./Usuario');
 const Fornecedor = require('./Fornecedor');
@@ -15,33 +16,24 @@ const Hospede_has_Reserva = require('./Hospede_has_Reserva');
 const EstoqueItem_has_ServicoExtra = require('./EstoqueItem_has_ServicoExtra');
 const Quarto_has_Reserva = require('./Quarto_has_Reserva');
 
+// Produto
 const Produto = sequelize.define('Produto', {
-  nome_item: {
-    type: DataTypes.STRING(255),
-    allowNull: false,
-  },
-  quantidade: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  preco: {
-    type: DataTypes.DECIMAL(10, 2),
-    allowNull: false,
-  },
-  data_validade: {
-    type: DataTypes.DATE,
-    allowNull: true,
-  },
+  nome_item: { type: DataTypes.STRING(255), allowNull: false },
+  quantidade: { type: DataTypes.INTEGER, allowNull: false },
+  preco: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
+  data_validade: { type: DataTypes.DATE, allowNull: true },
 }, {
   tableName: 'produtos',
   timestamps: true,
 });
 
-// Reserva → Hospede
+// =========================
+// DEFININDO RELACIONAMENTOS
+// =========================
+
 Reserva.belongsTo(Hospede, { foreignKey: 'hospedeId' });
 Hospede.hasMany(Reserva, { foreignKey: 'hospedeId' });
 
-// Reserva ↔ ServicoExtra (muitos-para-muitos)
 Reserva.belongsToMany(ServicoExtra, {
   through: ServicoExtra_has_Reserva,
   foreignKey: 'Reserva_idReserva',
@@ -53,7 +45,6 @@ ServicoExtra.belongsToMany(Reserva, {
   otherKey: 'Reserva_idReserva',
 });
 
-// EstoqueItem ↔ ServicoExtra (muitos-para-muitos)
 EstoqueItem.belongsToMany(ServicoExtra, {
   through: EstoqueItem_has_ServicoExtra,
   foreignKey: 'EstoqueItem_idEstoqueItem',
@@ -65,7 +56,6 @@ ServicoExtra.belongsToMany(EstoqueItem, {
   otherKey: 'EstoqueItem_idEstoqueItem',
 });
 
-// Quarto ↔ Reserva (muitos-para-muitos)
 Quarto.belongsToMany(Reserva, {
   through: Quarto_has_Reserva,
   foreignKey: 'Quarto_idQuarto',
@@ -77,7 +67,6 @@ Reserva.belongsToMany(Quarto, {
   otherKey: 'Quarto_idQuarto',
 });
 
-// Hospede ↔ Reserva (caso use associação separada)
 Hospede.belongsToMany(Reserva, {
   through: Hospede_has_Reserva,
   foreignKey: 'Hospede_idHospede',
@@ -89,7 +78,7 @@ Reserva.belongsToMany(Hospede, {
   otherKey: 'Hospede_idHospede',
 });
 
-
+// Exportando tudo
 module.exports = {
   sequelize,
   Produto,
