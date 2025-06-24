@@ -1,12 +1,15 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
+const ServicoExtra = require('./ServicoExtra');
+const Reserva = require('./Reserva');
+
 const ServicoExtra_has_Reserva = sequelize.define('ServicoExtra_has_Reserva', {
   ServicoExtra_idServicoExtra: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     references: {
-      model: 'ServicoExtra',
+      model: ServicoExtra,
       key: 'idServicoExtra',
     },
   },
@@ -14,7 +17,7 @@ const ServicoExtra_has_Reserva = sequelize.define('ServicoExtra_has_Reserva', {
     type: DataTypes.INTEGER,
     primaryKey: true,
     references: {
-      model: 'Reserva',
+      model: Reserva,
       key: 'idReserva',
     },
   },

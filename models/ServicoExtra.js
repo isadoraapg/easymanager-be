@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+
 const Reserva = require('./Reserva');
 
 const ServicoExtra = sequelize.define('ServicoExtra', {
